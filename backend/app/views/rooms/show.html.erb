@@ -1,0 +1,61 @@
+<%= action_cable_meta_tag %>
+
+<%  prev_date = nil %>
+
+<title><%= @room.name %> - Textgram</title>
+
+<div class="chat-container px-2">
+<h1><%= @room.name %></h1>
+<hr/>
+<div class="chatbox" data-channel-subscribe="room" data-room-id="<%= @room.id %>" data-current-user="<%= current_user.nickname %>" id="chatbox">
+<% @messages.each do |m| %>
+    <% if not prev_date or m.created_at.midnight > prev_date  %>
+       <div class="server-msg rounded-pill bg-info text-center w-25 mx-auto text-white my-1" data-date="<%= m.created_at.strftime('%d-%m-%y') %>" ><%= m.created_at.strftime('%d-%m-%y') %></div>        
+        <% prev_date = m.created_at.midnight %>
+    <% end %>
+    <% if m.system %>
+        <div class="server-msg rounded-pill bg-secondary text-center w-25 mx-auto my-1 text-wrap"><%= m.body %></div>
+    <% else %>
+    <% if m.user_id == current_user.id %>
+        <div class="my-msg bg-success ml-auto my-1 px-3 py-1">
+            <div clas="msg-container">
+                <div class="msg-body text-white text-wrap">
+                    <%= m.body %>
+                </div>
+                <div class="msg-foot text-right text-white-50 text-small">
+                    <%= m.created_at.strftime('%H:%M') %>
+                </div>
+            </div>
+        </div>
+    <% else %>
+        <div class="other-msg bg-primary my-1 px-3 py-1">
+            <div clas="msg-container">
+                <div class="msg-head text-left">
+                    <%= m.username %>
+                </div>
+                <div class="msg-body text-white text-wrap">
+                    <%= m.body %>
+                </div>
+                <div class="msg-foot text-right text-white-50 text-small">
+                    <%= m.created_at.strftime('%H:%M') %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+    <% end %>
+<% end %>
+</div>
+
+<form id="new-msg-form" data-remote="false">
+    <input name="authenticity_token" type="hidden" value=<%= form_authenticity_token %>>
+    <input type="hidden" name="message[chatroom_id]" value=<%= @room.id %>>
+    <div class="form-group row mt-3">
+        <div class="col-9 col-sm-11">
+            <input class="form-control" type="text" name="message[body]" id="message_body">
+        </div>
+        <div class="col-3 col-sm-1">
+            <button type="submit" class="btn btn-success">Enviar</button>
+        </div>
+    </div>
+</form>
+</div>

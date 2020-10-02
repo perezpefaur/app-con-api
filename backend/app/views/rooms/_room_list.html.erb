@@ -1,0 +1,104 @@
+<div class="room-index px-3">
+<button type="button" class="btn btn-success" id="btn-new-room" data-toggle="modal" data-target="#join-room-modal">Unirse a una Sala</button>
+<button type="button" class="btn btn-outline-success" id="btn-new-room" data-toggle="modal" data-target="#new-room-modal">Crear Sala</button>
+<hr/>
+<div class="rooms-list">
+<% @rooms.each do |r| %>
+    <div class="card mb-2">
+        <div class="card-header">
+            Código: <%= r.room_code %>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><%= r.name %></h5>
+            <p class="card-text"><%= r.description %></p>
+            <div class="row">
+            <% if @my_rooms.include? r %>
+                <a role="button" class="btn btn-primary mx-2" href=<%= show_room_path(r) %>>Abrir Chat</a>
+            <% else %>
+                <%= form_with(url: join_room_path, method: "post", remote: true) do |f| %>
+                    <input type="hidden" name="authenticity_token" value=<%= form_authenticity_token %>>
+                    <%= hidden_field(:chatroom, :chatroom_code, value: r.room_code) %>
+                    <button type="submit" class="btn btn-success mx-2">Unirse</button>
+                <% end %>
+            <% end %>
+            <% if r.user_id == current_user.id %>
+                <%= form_with(url: delete_room_path(r), method: "delete", remote: true, class: "form-inline") do |f| %>
+                    <input type="hidden" name="authenticity_token" value=<%= form_authenticity_token %>>
+                    <button type="submit" class="btn btn-outline-danger mx-2">Cerrar Sala</button>
+                <% end %>
+            <% end %>
+            </div>
+        </div>
+    </div>
+<% end %>
+</div>
+</div>
+<!-- Modal New room -->
+<div class="modal fade" id="new-room-modal" tabindex="-1" aria-labelledby="newRoomModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newRoomModalLabel">Crear Nueva Sala</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_with( url: new_room_path, method: "post", remote: true) do |f| %>
+            <input type="hidden" name="authenticity_token" value=<%= form_authenticity_token %>>
+            <div class="form-group">
+                <%= label_tag(:name, "Nombre de la sala") %>
+                <%= text_field(:chatroom, :name, class: "form-control", required: "") %>
+            </div>
+            <div class="form-group">
+                <%= label_tag(:description, "Descipción") %>
+                <%= text_area(:chatroom, :description, class: "form-control", placeholder: "(recomendado)") %>
+            </div>
+            <div class="form-group row">
+                <%= label_tag(:room_code, "Código de sala:", class: "col-sm-4 col-form-label") %>
+                <%= text_field(:chatroom, :room_code, readonly: true, class: "col-sm-8 form-control-plaintext", value: @r_id) %>
+            </div>
+            <div class="form-check">
+                <%= check_box(:chatroom, :private, class: "form-check-input") %>
+                <%= label_tag(:private, "Hacer sala privada", class: "form-check-label") %>
+                <small id="privateHelp" class="form-text text-muted">Solo se prodrá acceder con el código.</small>
+            </div>
+
+            <div class="form-group ml-auto mt-4">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Crear</button>
+            </div>
+            <% end %>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Join room -->
+<div class="modal fade" id="join-room-modal" tabindex="-1" aria-labelledby="joinRoomModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="joinRoomModalLabel">Unirse a Sala</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_with(url: join_room_path, method: "post", remote: true) do |f| %>
+            <input type="hidden" name="authenticity_token" value=<%= form_authenticity_token %>>
+            <div class="form-group row">
+                <%= label_tag(:chatroom_code, "Código de sala:", class: "col-sm-4 col-form-label") %>
+                <%= text_field(:chatroom, :chatroom_code, class: "col-sm-8 form-control", required: "") %>
+            </div>
+            <div class="form-group ml-auto mt-4">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Unirse</button>
+            </div>
+            <% end %>
+        
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+#chatroom_room_code {
+    font-size: large;
+    font-weight: bold;
+}
+
+.my-msg {
+    min-width: 25%;
+    max-width: 90%;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.other-msg {
+    min-width: 25%;
+    max-width: 90%;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.msg-foot {
+    font-size: small;
+}
+
+.chat-container {
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.chatbox {
+    overflow-y: scroll;
+}

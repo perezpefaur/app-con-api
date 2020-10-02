@@ -1,0 +1,18 @@
+
+.alert {
+    margin: 0 10px;
+    max-width: 500px;
+}
+
+#log-in:hover {
+    background-color: rgba(0,0,0,.3);
+    color: white;
+}
+
+.alerts-container {
+    position: fixed;
+}
+
+@import "./home";
+@import "./sessions";
+@import "./rooms";
