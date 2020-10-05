@@ -57,6 +57,7 @@ class RecentsChats extends StatelessWidget {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 35.0,
+                            backgroundColor: Colors.blueGrey,
                           ),
                           SizedBox(
                             width: 10.0,
@@ -109,7 +110,7 @@ class RecentsChats extends StatelessWidget {
                                   width: 40.0,
                                   height: 20.0,
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Colors.redAccent,
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   alignment: Alignment.center,

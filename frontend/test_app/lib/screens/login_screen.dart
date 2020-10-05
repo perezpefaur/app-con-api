@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,8 +13,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _submit() {
     // Acá estamos revisando el input del usuario
-    if (_formKey.currentState.validate()){
+    if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HomeScreen(),
+        ),
+      );
     }
   }
 
@@ -64,8 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     width: 250.0,
                     child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
                       onPressed: _submit,
-                      color: Colors.redAccent,
+                      color: Theme.of(context).primaryColor,
                       padding: EdgeInsets.all(10.0),
                       child: Text(
                         'Login',
