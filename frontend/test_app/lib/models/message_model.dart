@@ -85,31 +85,31 @@ List<Message> chats = [
 List<Message> messages = [
   Message(
     sender: perecic,
-    time: '5:30 PM',
-    text: 'Hola, que tal?',
+    time: '7:00 PM',
+    text: 'Me eché el ramo',
     unread: true,
   ),
   Message(
     sender: gerardo,
-    time: '5:30 PM',
-    text: 'Hola, que tal?',
+    time: '5:52 PM',
+    text: 'La API también grande cabros',
     unread: true,
   ),
   Message(
     sender: lucas,
-    time: '5:30 PM',
-    text: 'Hola, que tal?',
+    time: '5:50 PM',
+    text: 'Quedo pulenta la interfaz',
     unread: true,
   ),
   Message(
     sender: igo,
-    time: '5:30 PM',
-    text: 'Hola, que tal?',
+    time: '5:40 PM',
+    text: 'Que es esto',
     unread: false,
   ),
   Message(
     sender: ian,
-    time: '5:30 PM',
+    time: '5:36 PM',
     text: 'Hola, que tal?',
     unread: true,
   ),
@@ -118,5 +118,11 @@ List<Message> messages = [
     time: '5:30 PM',
     text: 'Que pasa loco',
     unread: true,
+  ),
+  Message(
+    sender: currentUser,
+    time: '5:20 PM',
+    text: "Buena grupo 3, se sacaron un 7",
+    unread: false,
   ),
 ];
