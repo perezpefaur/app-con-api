@@ -6,11 +6,13 @@ class Message {
   final User sender;
   final String time; // puede ser date time
   final String text;
+  final bool unread;
 
   Message({
     this.sender,
     this.time,
     this.text,
+    this.unread,
   });
 }
 
@@ -51,26 +53,31 @@ List<Message> chats = [
     sender: perecic,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: gerardo,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: lucas,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: igo,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: false,
   ),
   Message(
     sender: ian,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
 ];
 
@@ -80,30 +87,36 @@ List<Message> messages = [
     sender: perecic,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: gerardo,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: lucas,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: igo,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: false,
   ),
   Message(
     sender: ian,
     time: '5:30 PM',
     text: 'Hola, que tal?',
+    unread: true,
   ),
   Message(
     sender: perecic,
     time: '5:30 PM',
     text: 'Que pasa loco',
+    unread: true,
   ),
 ];
