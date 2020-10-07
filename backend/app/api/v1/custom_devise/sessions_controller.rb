@@ -13,6 +13,7 @@ module V1
       # skip_before_action :authenticate_entity_from_token!, only: [:create]
       #skip_before_action :authenticate_entity!, only: [:create]
       before_action :set_current_user, only: [:destroy]
+      skip_before_action :verify_signed_out_user
 
       # POST /users/sign_in
       def create
@@ -31,7 +32,7 @@ module V1
       # DELETE /users/sign_out
       def destroy
         if not current_user
-          render json: {msg: "Invalid Credentials", status: "Invalid"}
+          render json: {error: "Invalid Credentials"}
           return
         end
 
@@ -39,10 +40,8 @@ module V1
 
         reset_token current_user
 
-        render json: {msg: "Sesión cerrada correctamente", status: "OK"}
+        render json: {status: "OK"}
       end
-
-      def 
 
       private
 

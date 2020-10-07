@@ -29,7 +29,7 @@ module V1
         if resource.save
           sign_up(resource_name, resource)
           puts resource
-          render json: resource
+          render json: {account: resource}
           # render file: 'v1/custom_devise/registrations/create', status: :created
         else
           clean_up_passwords resource
@@ -49,14 +49,14 @@ module V1
       # PUT /resource
       def update
         if not current_user
-          render json: {msg: "Invalid Credentials", status: "Invalid"}
+          render json: {error: "Invalid Credentials"}
           return
         end
 
         if current_user.update(update_params)
-          render json: {msg: "Success update", user: current_user}
+          render json: {msg: "Success update", account: current_user}
         else
-          render json: { errors: resource.errors.full_messages }
+          render json: { error: resource.errors.full_messages }
         end
 
       end
