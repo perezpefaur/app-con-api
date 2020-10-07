@@ -1,6 +1,6 @@
 FROM ruby:2.6.5-alpine
 
-LABEL maintainer="Ian Basly igbasly@uc.cl"
+LABEL maintainer="Grupo 3"
 
 # Install necessary dependencies
 RUN apk add --update --no-cache \
@@ -33,10 +33,6 @@ COPY . $APP_HOME
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-
-ENV REDIS_URL="redis://redis:6379"
-
-RUN bundle exec rails assets:precompile
 
 # Start the main process.
 CMD ["rails", "server", "-b", "0.0.0.0"]
