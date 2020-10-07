@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   scope path: '/api' do
     api_version(module: "Api::V1", path: { value: "v1" }, defaults: { format: 'json' }) do
+      devise_for :users, controllers: {
+        registrations: 'v1/custom_devise/registrations',
+        sessions: 'v1/custom_devise/sessions'
+      }
     end
   end
   get 'home/index'
