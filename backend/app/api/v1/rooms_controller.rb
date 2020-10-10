@@ -1,20 +1,20 @@
 # app/controllers/v1/rooms_controller.rb
 module V1
   class RoomsController < BaseController
-    
+
     respond_to :json
 
     before_action :reset_session
 
     skip_before_action :verify_authenticity_token
-    
+
     before_action :set_current_user, only: [:get_my_rooms, :create]
-   
+
     before_action :get_create_params, only: [:create]
     before_action :get_my_rooms, only: [:index, :my_rooms]
     before_action :set_join_room, only: [:join_room]
     before_action :set_room, only: [:update, :show, :destroy]
-    
+
     def index
         av_rooms = Chatroom.where({private: false}).to_a
         @rooms = @my_rooms + av_rooms.difference(@my_rooms.to_a)
@@ -82,9 +82,9 @@ module V1
         @room = Chatroom.create(@new_room_attr)
         Member.create({user_id: current_user.id, chatroom_id: @room.id})
 
-        render json: @room, status: created
+        render json: @room
     end
-    
+
     protected
 
     def set_current_user
