@@ -61,7 +61,7 @@ module V1
       end
 
       def sign_in_params
-        params.fetch(:user).permit([:password, :email])
+        params.fetch(:v1_user).permit([:password, :email])
       end
 
       def reset_token(resource)

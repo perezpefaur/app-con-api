@@ -1,8 +1,20 @@
-class RoomsController < ApplicationController
+# app/controllers/v1/rooms_controller.rb
+module V1
+  class RoomsController < BaseController
+    
+    respond_to :json
+
+    before_action :reset_session
+
+    skip_before_action :verify_authenticity_token
+    
+    before_action :set_current_user, only: [:get_my_rooms, :create]
+   
     before_action :get_create_params, only: [:create]
     before_action :get_my_rooms, only: [:index, :my_rooms]
     before_action :set_join_room, only: [:join_room]
     before_action :set_room, only: [:update, :show, :destroy]
+    
     def index
         av_rooms = Chatroom.where({private: false}).to_a
         @rooms = @my_rooms + av_rooms.difference(@my_rooms.to_a)
@@ -61,14 +73,35 @@ class RoomsController < ApplicationController
     end
 
     def create
+        puts 'Enter Create'
+        if not current_user
+            render json: {error: "Invalid Credentials"}
+            return
+        end
         @new_room_attr[:user_id] = current_user.id
         @room = Chatroom.create(@new_room_attr)
         Member.create({user_id: current_user.id, chatroom_id: @room.id})
 
-        redirect_to rooms_index_path
+        render json: @room, status: created
     end
     
     protected
+
+    def set_current_user
+        puts 'Here in Set Current User'
+        token = nil
+        if request.headers.include? "X-User-Token"
+          token = request.headers["X-User-Token"]
+        elsif params.include? "chatroom"
+            if params[:chatroom].include? "authentication_token"
+                token = params[:chatroom][:authentication_token]
+                puts token
+            end
+        end
+        if token
+          @current_user = User.where({authentication_token: token}).first
+        end
+      end
 
     def set_room
         @room = Chatroom.find_by({id: params[:chatroom]})
@@ -79,11 +112,21 @@ class RoomsController < ApplicationController
     end
 
     def get_my_rooms
-        @my_rooms = Chatroom.includes(:members).where(members: {user_id: current_user.id})
+        if not current_user
+            render json: {error: "Invalid Credentials"}
+            return
+        end
+        puts @current_user.authentication_token
+        @my_rooms = Chatroom.includes(:chatroom).where(members: {user_id: current_user.id})
     end
 
     def get_create_params
-        @new_room_attr = params.require(:chatroom).permit(:name, :private, :description, :room_code)
+        if not current_user
+            render json: {error: "Invalid Credentials"}
+            return
+        end
+        @room_id = get_room_id()
+        @new_room_attr = params.require(:chatroom).permit(:name, :private, :description, room_code: @room_id)
     end
 
     def get_room_id
@@ -93,4 +136,6 @@ class RoomsController < ApplicationController
         end
         return @r_id
     end
+
+  end
 end

@@ -15,15 +15,20 @@ module V1
       #skip_before_action :authenticate_entity!, only: [:create]
 
       #skip_before_action :authenticate_scope!
-      append_before_action :authenticate_scope!, only: [:destroy]
-      before_action :set_current_user, only: [:update]
+
+
+      # append_before_action :authenticate_scope!, only: [:destroy]
+      # before_action :set_current_user, only: [:update]
       
+      prepend_before_filter :require_no_authentication, only: [:create, :edit, :update, :cancel ]
+      prepend_before_filter :authenticate_scope!, only: [:destroy]
 
       # GET /users/sign_up
   
 
       # POST /users
       def create
+        puts "Enter Create"
         build_resource(sign_up_params)
 
         if resource.save
@@ -74,6 +79,7 @@ module V1
         end
         if token
           @current_user = User.where({authentication_token: token}).first
+          puts token
         end
       end
 
