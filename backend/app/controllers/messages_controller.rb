@@ -64,7 +64,6 @@ class MessagesController < ApplicationController
                 server: true,
                 data: {body: resp, created_at: date}
               )
-
             return "pass"
         elsif command.length == 2
             res = false
