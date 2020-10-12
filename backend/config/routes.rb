@@ -13,6 +13,9 @@ Rails.application.routes.draw do
       post 'chatrooms/join', to: "rooms#join_room", as: :join_room #Midle Check (Missing Action Cable)
       get 'chatrooms/:id', to: "rooms#show", as: :show_room #Check
       delete 'chatrooms/:id', to: "rooms#destroy", as: :delete_room #Check
+
+      get 'chatrooms/:id/messages', to: "messages#index", as: :messages_room
+      post 'chatrooms/:id/messages', to: "messages#create", as: :create_message_room
     end
   end
   # get 'home/index'

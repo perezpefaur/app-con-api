@@ -161,6 +161,100 @@ Response:
 O un response `204` vacío cuando el cierre de sesión fue correcto.
 
 
+#### **All Rooms** `GET`: `/api/v1/chatrooms``
+En necesario agregar el siguiente request o el *header* `X-User-Token`.
+```json
+{
+    "chatroom": {
+        "authentication_token": TOKEN
+    }
+}
+```
+
+Reponse:
+```json
+[
+    {
+        "id": ROOM_ID,
+        "name": ROOM_NAME,
+        "description": ROOM_DESCRIPTION,
+        "user_id": OWNER_ID,
+        "private": ROOM_PRIVATE,
+        "created_at": DATE,
+        "updated_at": DATE,
+        "room_code": ROOM_CODE
+    },
+
+    ...
+
+    {
+        "id": ROOM_ID,
+        "name": ROOM_NAME,
+        "description": ROOM_DESCRIPTION,
+        "user_id": OWNER_ID,
+        "private": ROOM_PRIVATE,
+        "created_at": DATE,
+        "updated_at": DATE,
+        "room_code": ROOM_CODE
+    }
+]
+```
+
+#### **Show Room** `GET`: `/api/v1/chatrooms/:id`
+Obtiene la información y todos los mensajes de la sala de id `:id`. Es necesario enviar credenciales y solo aceptará el request si el usuario es miembro de la sala.
+
+Request:
+```json
+{
+    "chatroom": {
+        "authentication_token": TOKEN
+    }
+}
+```
+
+Response:
+```json
+{
+    "room": {
+        "id": ROOM_ID,
+        "name": ROOM_NAME,
+        "description": ROOM_DESCRIPTION,
+        "user_id": OWNER_ID,
+        "private": ROOM_PRIVATE,
+        "created_at": DATE,
+        "updated_at": DATE,
+        "room_code": ROOM_CODE
+    },
+    "messages": [
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        },
+
+        ...
+        
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        }
+    ]
+}
+```
+
+Bad response:
+```json
+{
+   "status": "No se ha podido acceder a la sala." 
+}
+```
+
+
 #### **Create Room** `POST`: `/api/v1/chatrooms`
 Crear una sala con el siguiente request
 ```json
@@ -187,5 +281,130 @@ Responses:
     "created_at": DATE,
     "updated_at": DATE,
     "room_code": ROOM_CODE
+}
+```
+
+#### **Join Room** `POST`: `api/v1/chatrooms/join``
+Unirse a la sala de id `:id`.
+```json
+{
+    "chatroom": {
+        "authentication_token": TOKEN,
+        "room_code": ROOM_CODE
+    }
+}
+```
+
+Reponse:
+
+```json
+{
+    "room": {
+        "id": ROOM_ID,
+        "name": ROOM_NAME,
+        "description": ROOM_DESCRIPTION,
+        "user_id": OWNER_ID,
+        "private": ROOM_PRIVATE,
+        "created_at": DATE,
+        "updated_at": DATE,
+        "room_code": ROOM_CODE
+    },
+    "messages": [
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        },
+
+        ...
+        
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        }
+    ]
+}
+```
+
+
+#### **Room Messages** `GET`: `/api/v1/chatrooms/:id/messages`
+Obtiene todos los mensajes de la sala de id `:id`. Es necesario enviar credenciales y solo aceptará el request si el usuario es miembro de la sala.
+
+Request:
+```json
+{
+    "authentication_token": TOKEN
+}
+```
+
+Respoonse
+```json
+{
+    "messages": [
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        },
+
+        ...
+
+        {
+            "body": MSG_BODY,
+            "user": USER_NICKNAME,
+            "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+            "isMe": BOOL,
+            "system": BOOL
+        }
+    ],
+    "status": 200
+}
+```
+
+
+#### **Send Message** `POST`: `/api/v1/chatrooms/:id/messages`
+Envía un mensaje a la sala de id `:id`. Es necesario enviar credenciales y solo aceptará el request si el usuario es miembro de la sala.
+
+Request:
+```json
+{
+    "authentication_token": TOKEN,
+    "message": {
+        "body": MSG_BODY
+    }
+}
+```
+
+Response:
+```json
+{
+    "message": {
+        "body": MSG_BODY,
+        "username": USER_NICKNAME,
+        "date": [DAY, MONTH, YEAR, HOURS, MINUTES],
+    },
+    "status": 200
+}
+```
+
+BAD resonse:
+```json
+{
+    "status": 400,
+    "error": "Invalid room ID"
+}
+```
+
+```json
+{
+    "status": 401,
+    "error": "Invalid Credentials"
 }
 ```
