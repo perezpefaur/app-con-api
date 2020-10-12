@@ -65,4 +65,7 @@ Rails.application.configure do
   config.hosts << "rails_app"
   config.hosts << "textgram.gq"
   config.hosts << "www.textgram.gq"
+  config.hosts << "lb-backend-e1-1925354652.us-east-1.elb.amazonaws.com"
+  config.hosts << "api.textgram.gq"
+
 end
