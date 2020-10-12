@@ -107,7 +107,7 @@ Para editar los datos del usuario, se utiliza el siguiente request:
 Acá solo se deben incluir los atributos que se quieran modificar.
 El `TOKEN` puede ir como un atributo o en el header como se expresó anteriormente.
 
-#### **Log In** `POST`: `/api/v1/users/log_in`
+#### **Log In** `POST`: `/api/v1/users/sign_in`
 Inicio de sesión con el siguiente request
 ```json
 {
@@ -159,3 +159,33 @@ Response:
 }
 ```
 O un response `204` vacío cuando el cierre de sesión fue correcto.
+
+
+#### **Create Room** `POST`: `/api/v1/chatrooms`
+Crear una sala con el siguiente request
+```json
+{
+    "chatroom" :
+    {
+        "authentication_token": TOKEN,
+        "name" : NAME ,
+        "private" : BOOL,
+        "description" : DESCRIPTION
+   }
+}
+```
+
+Responses:
+
+```json
+{
+    "id": ID,
+    "name": NAME,
+    "description": DESCRIPTION,
+    "user_id": USER_ID,
+    "private": BOOL,
+    "created_at": DATE,
+    "updated_at": DATE,
+    "room_code": ROOM_CODE
+}
+```
