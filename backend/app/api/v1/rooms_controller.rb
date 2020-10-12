@@ -32,12 +32,17 @@ module V1
             if Member.create({user_id: current_user.id, chatroom_id: @room.id})
                 msg = Message.create({user_id: 0, chatroom_id: @room.id, system: true, body: "@#{current_user.nickname} se ha unido al chat!"})
                 date = msg.created_at
-                ActionCable.server.broadcast(
-                    "messages_#{@room.id}",
-                    server: true,
-                    data: {body: msg.body, created_at: [date.day, date.month, date.year, date.hour, date.min]}
-                  )
-                render json: @room
+                # ActionCable.server.broadcast(
+                #     "messages_#{@room.id}",
+                #     server: true,
+                #     data: {body: msg.body, created_at: [date.day, date.month, date.year, date.hour, date.min]}
+                #   )
+                db_messages = Message.where({chatroom_id: @room.id})
+                @messages = []
+                db_messages.each do |m|
+                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_user.id, system: m.system}
+                end
+                render json: {room: @room, messages: @messages}
             else
                 render json: {status: "No se ha podido ingresar a la sala"}
             end
@@ -48,8 +53,12 @@ module V1
 
     def show
         if @room and Member.find_by({user_id: current_user.id, chatroom_id: @room.id})
-            @messages = Message.where({chatroom_id: @room.id})
-            render json: @messages
+            db_messages = Message.where({chatroom_id: @room.id})
+                @messages = []
+                db_messages.each do |m|
+                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_user.id, system: m.system}
+                end
+                render json: {room: @room, messages: @messages}
         else
             render json: {status: "No se ha podido acceder a la sala."}
         end
