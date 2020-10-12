@@ -53,13 +53,20 @@ module V1
 
       # PUT /resource
       def update
-        if not current_user
+        if not resource
           render json: {error: "Invalid Credentials"}
           return
         end
 
-        if current_user.update(update_params)
-          render json: {msg: "Success update", account: current_user}
+        if update_params[:password].present?
+          if not update_params[:password_confirmation].present?
+            render json: {error: "Password confirmation is not included."}
+            return
+          end
+        end
+
+        if resource.update(update_params)
+          render json: {msg: "Success update", account: resource}
         else
           render json: { error: resource.errors.full_messages }
         end
@@ -78,13 +85,12 @@ module V1
           end
         end
         if token
-          @current_user = User.where({authentication_token: token}).first
-          puts token
+          self.resource = User.where({authentication_token: token}).first
         end
       end
 
       def update_params
-        params.fetch(:v1_user).permit([:nickname])
+        params.fetch(:v1_user).permit([:nickname, :password, :password_confirmation])
       end
 
       def sign_up_params

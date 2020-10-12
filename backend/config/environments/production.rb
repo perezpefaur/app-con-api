@@ -8,7 +8,7 @@ Rails.application.configure do
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
-  config.eager_load = true
+  config.eager_load = false
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
@@ -117,4 +117,7 @@ Rails.application.configure do
   config.hosts << "textgram.gq"
   config.hosts << "www.textgram.gq"
   config.hosts << "localhost"
+  config.hosts << "lb-backend-e1-1925354652.us-east-1.elb.amazonaws.com"
+  config.hosts << "api.textgram.gq"
+  
 end

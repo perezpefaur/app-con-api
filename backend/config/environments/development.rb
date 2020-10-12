@@ -65,7 +65,7 @@ Rails.application.configure do
   config.hosts << "rails_app"
   config.hosts << "textgram.gq"
   config.hosts << "www.textgram.gq"
-
-  config.web_console.whitelisted_ips = ['10.0.0.0/8', '172.19.0.0/12', '192.168.0.0/16']
+  config.hosts << "lb-backend-e1-1925354652.us-east-1.elb.amazonaws.com"
+  config.hosts << "api.textgram.gq"
 
 end

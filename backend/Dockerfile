@@ -29,6 +29,8 @@ RUN bundle install
 
 COPY . $APP_HOME
 
+EXPOSE 3000
+
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
