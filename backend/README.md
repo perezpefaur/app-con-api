@@ -408,3 +408,14 @@ BAD resonse:
     "error": "Invalid Credentials"
 }
 ```
+
+---
+
+## Caché
+
+EL uso de caché para esta entrega se implementó mediante el servicio de AWS ElastiCache con un cluster de Redis. Lo implementamos de esta forma para asegurar una escalabilidad, aprovechar su buen desempeño y simplificar la carga en la administración, monitoreo y el funcionamiento de la memoria, enfocandonos en la parte del desarrollo únicamente. Todo esto fue investigado desde su [página](https://aws.amazon.com/es/elasticache/) para una mejor elección.
+
+Esta tecnología fue implementada en el desarrollo utilizando Redis instalado localmente, pero que al momento de pasar a producción, este se conecte al servicio ElastiCache con el cluster de Redis estando dentro de un mismo grupo de seguridad (y VPN). Con esto nos conectamos a su *Primary Endpoint* para ser utilizado.
+
+### Publisher/Suscriber
+En una primera instancia se implementó ElastiCache para Redis como un estándar **Pub/Sub** para chat y mensajería, que en este caso permitía la transmición de los mensajes en tiempo real y la intercomunicación entre servidores. Esto se hace mediante una configuración *FIFO*, pero que no es garantizada, ya que sigue el [protocolo de Redis](https://redis.io/topics/pubsub) específicamente. Este se usó como consecuencia directa del querer realizar un chat en tiempo real, donde esta configuración nos permitía asociar a un usuario como receptor de las nuevas publicaciones (mensajes) que se vayan enviando. 
