@@ -13,13 +13,13 @@ module V1
     before_action :set_room, only: [:create, :index]
 
     def index
-      if not current_user
+      if not current_v1_user
         response = {:status => 401, error: "Invalid Credentials"}
-      elsif @room and Member.find_by({user_id: current_user.id, chatroom_id: @room.id})
+      elsif @room and Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
         db_messages = Message.where({chatroom_id: @room.id})
         @messages = []
         db_messages.each do |m|
-          @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_user.id, system: m.system}
+          @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_v1_user.id, system: m.system}
         end
         
         response = {messages: @messages, status: 200}
@@ -31,14 +31,14 @@ module V1
     end
 
     def create
-      if not current_user
+      if not current_v1_user
         response = {:status => 401, error: "Invalid Credentials"}
       elsif not @room
         response = {status: 400, error: "Invalid room ID" }
       else
         @msg_params = get_create_params
-        @msg_params[:user_id] = current_user.id
-        @msg_params[:username] = current_user.nickname
+        @msg_params[:user_id] = current_v1_user.id
+        @msg_params[:username] = current_v1_user.nickname
         @msg_params[:chatroom_id] = @room.id
         
         message = Message.new(@msg_params)
@@ -79,7 +79,7 @@ module V1
         puts "============"
         puts token
         if token
-          @current_user = User.where({authentication_token: token}).first
+          @current_v1_user = User.where({authentication_token: token}).first
         end
       end
 

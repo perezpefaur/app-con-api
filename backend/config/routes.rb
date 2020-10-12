@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, :skip => [:sessions, :passwords, :registrations]
+  #devise_for :users, :skip => [:sessions, :passwords, :registrations]
   scope path: '/api' do
     api_version(module: "V1", path: { value: "v1" }, defaults: { format: 'json' }) do
       devise_for :users, controllers: {

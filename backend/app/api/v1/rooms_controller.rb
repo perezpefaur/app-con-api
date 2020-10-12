@@ -29,8 +29,8 @@ module V1
 
     def join_room
         if @room
-            if Member.create({user_id: current_user.id, chatroom_id: @room.id})
-                msg = Message.create({user_id: 0, chatroom_id: @room.id, system: true, body: "@#{current_user.nickname} se ha unido al chat!"})
+            if not Member.where({user_id: current_v1_user.id, chatroom_id: @room.id}) && Member.where({user_id: current_v1_user.id, chatroom_id: @room.id})
+                msg = Message.create({user_id: 0, chatroom_id: @room.id, system: true, body: "@#{current_v1_user.nickname} se ha unido al chat!"})
                 date = msg.created_at
                 # ActionCable.server.broadcast(
                 #     "messages_#{@room.id}",
@@ -40,7 +40,7 @@ module V1
                 db_messages = Message.where({chatroom_id: @room.id})
                 @messages = []
                 db_messages.each do |m|
-                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_user.id, system: m.system}
+                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_v1_user.id, system: m.system}
                 end
                 render json: {room: @room, messages: @messages}
             else
@@ -52,11 +52,11 @@ module V1
     end
 
     def show
-        if @room and Member.find_by({user_id: current_user.id, chatroom_id: @room.id})
+        if @room and Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
             db_messages = Message.where({chatroom_id: @room.id})
                 @messages = []
                 db_messages.each do |m|
-                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_user.id, system: m.system}
+                  @messages << {body: m.body, user: m.username, date: m.created_at.strftime("%d %m %y %H %M").split(" "), isMe: m.user_id == current_v1_user.id, system: m.system}
                 end
                 render json: {room: @room, messages: @messages}
         else
@@ -77,13 +77,13 @@ module V1
     end
 
     def create
-        if not current_user
+        if not current_v1_user
             render json: {error: "Invalid Credentials"}
             return
         end
-        @new_room_attr[:user_id] = current_user.id
+        @new_room_attr[:user_id] = current_v1_user.id
         @room = Chatroom.create(@new_room_attr)
-        Member.create({user_id: current_user.id, chatroom_id: @room.id})
+        Member.create({user_id: current_v1_user.id, chatroom_id: @room.id})
 
         render json: @room
     end
@@ -102,12 +102,12 @@ module V1
             end
         end
         if token
-          @current_user = User.where({authentication_token: token}).first
+          @current_v1_user = User.where({authentication_token: token}).first
         end
       end
 
     def set_room
-        if not current_user
+        if not current_v1_user
             render json: {error: "Invalid Credentials"}
             return
         end
@@ -115,7 +115,7 @@ module V1
     end
 
     def set_join_room
-        if not current_user
+        if not current_v1_user
             render json: {error: "Invalid Credentials"}
             return
         end
@@ -123,15 +123,15 @@ module V1
     end
 
     def get_my_rooms
-        if not current_user
+        if not current_v1_user
             render json: {error: "Invalid Credentials"}
             return
         end
-        @my_rooms = Chatroom.includes(:members).where(members: {user_id: current_user.id})
+        @my_rooms = Chatroom.includes(:members).where(members: {user_id: current_v1_user.id})
     end
 
     def get_create_params
-        if not current_user
+        if not current_v1_user
             render json: {error: "Invalid Credentials"}
             return
         end

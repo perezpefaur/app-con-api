@@ -9,7 +9,7 @@ module V1
 
       skip_before_action :verify_authenticity_token
       
-      acts_as_token_authentication_handler_for User
+      acts_as_token_authentication_handler_for User, fallback_to_devise: false
 
       #skip_before_action :authenticate_entity_from_token!, only: [:create]
       #skip_before_action :authenticate_entity!, only: [:create]
@@ -18,10 +18,10 @@ module V1
 
 
       # append_before_action :authenticate_scope!, only: [:destroy]
-      # before_action :set_current_user, only: [:update]
+      before_action :set_current_user, only: [:update]
       
-      prepend_before_filter :require_no_authentication, only: [:create, :edit, :update, :cancel ]
-      prepend_before_filter :authenticate_scope!, only: [:destroy]
+      #prepend_before_filter :require_no_authentication, only: [:create, :edit, :update, :cancel ]
+      #prepend_before_filter :authenticate_scope!, only: [:destroy]
 
       # GET /users/sign_up
   

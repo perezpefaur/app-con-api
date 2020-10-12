@@ -5,7 +5,7 @@ module V1
     
     respond_to :json
 
-      acts_as_token_authentication_handler_for User
+      acts_as_token_authentication_handler_for User, fallback_to_devise: false
 
       before_action :reset_session
 
@@ -20,7 +20,7 @@ module V1
         allow_params_authentication!
     
         self.resource = warden.authenticate!(auth_options)
-        sign_in(resource_name, resource)
+        #sign_in(resource_name, resource)
         
 
         reset_token resource
@@ -31,14 +31,14 @@ module V1
 
       # DELETE /users/sign_out
       def destroy
-        if not current_user
+        if not @current_user
           render json: {error: "Invalid Credentials"}
           return
         end
 
-        warden.authenticate!
+        #warden.authenticate!
 
-        reset_token current_user
+        reset_token @current_user
 
         render json: {status: "OK"}
       end
@@ -57,6 +57,7 @@ module V1
         end
         if token
           @current_user = User.where({authentication_token: token}).first
+          puts "HAY USER"
         end
       end
 
