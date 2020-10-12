@@ -31,5 +31,5 @@ Rails.application.routes.draw do
 
   mount ActionCable.server, at: '/cable'
 
-  root 'rooms#index'
+  root 'home#index'
 end
