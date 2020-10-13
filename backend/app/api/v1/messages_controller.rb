@@ -35,7 +35,7 @@ module V1
         response = {:status => 401, error: "Invalid Credentials"}
       elsif not @room
         response = {status: 400, error: "Invalid room ID" }
-      else
+      elsif Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
         @msg_params = get_create_params
         @msg_params[:user_id] = current_v1_user.id
         @msg_params[:username] = current_v1_user.nickname
@@ -57,9 +57,24 @@ module V1
             #     server: false,
             #     data: @msg_params
             # )
+
+            if @msg_params[:body].include? "@"
+              nickname = @msg_params[:body].split("@")[1].split(" ")[0]
+              mention = User.where({nickname: nickname}).first
+              if mention
+                notification = {title: "Te han mencionado en la sala #{@room.name}", body: @msg_params[:body]}
+                ActionCable.server.broadcast(
+                    "notification_user_#{mention.id}",
+                    server: false,
+                    data: notification
+                )
+              end
+            end
         else
             response = {error: "Can't send the message", status: 400}
         end
+      else
+        response = {error: "Can't send the message", status: 400}
       end
       
       render json: response, status: response[:status]

@@ -29,7 +29,8 @@ module V1
 
     def join_room
         if @room
-            if not Member.where({user_id: current_v1_user.id, chatroom_id: @room.id}) && Member.where({user_id: current_v1_user.id, chatroom_id: @room.id})
+            if not Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
+                Member.create({user_id: current_v1_user.id, chatroom_id: @room.id})
                 msg = Message.create({user_id: 0, chatroom_id: @room.id, system: true, body: "@#{current_v1_user.nickname} se ha unido al chat!"})
                 date = msg.created_at
                 # ActionCable.server.broadcast(
