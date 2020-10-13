@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/models/log_in_api.dart';
 import 'package:test_app/widgets/category_selector.dart';
 import 'package:test_app/widgets/recent_chats.dart';
 import 'package:test_app/widgets/rooms_favoritas.dart';
 
 class HomeScreen extends StatefulWidget{
+  final Session session;
+
+  HomeScreen({this.session});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -22,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen>{
           onPressed: () {} ,
         ),
         title: Text(
-          'Chats',
+          'Hello ${widget.session.nickname}',
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
