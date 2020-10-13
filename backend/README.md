@@ -1,6 +1,7 @@
-# README APP-WEB E0
+# README APP-WEB E1
+## URL: [https://api.textgram.gq/](https://api.textgram.gq)
 
-## Configuraciones
+## Configuraciones Locales
 
 Al clonar el repositorio e iniciar la aplicación por primeroa vez, se deben considerar las siguientes configuraciones.
 
@@ -28,11 +29,15 @@ Esta aplicación se compone de tres imágenes:
 Imágen conrrespondiente a la base de datos POSTGRES. Para ella es necesario la configuración de las variables de entorno antes mencionadas.
 * Puerto: 5432
 
+### Redis
+Imegen correspondiente al servidor Redis local para la recepción de mensajes y notificaciones de forma automática y en vivo.
+* Puerto: 6379
+
 ### WEB
 
 Corresonde a la imágen de la apliciación web en RAILS. Depende de la imágen DB para su funcionamiento.
 * Puerto: 3000
-* Dependencias: DB
+* Dependencias: DB -> Redis
 
 ### DNS
 
@@ -201,7 +206,7 @@ Reponse:
 ```
 
 #### **Show Room** `GET`: `/api/v1/chatrooms/:id`
-Obtiene la información y todos los mensajes de la sala de id `:id`. Es necesario enviar credenciales y solo aceptará el request si el usuario es miembro de la sala.
+Obtiene la información y todos los mensajes de la sala de id `:id`. Es necesario enviar credenciales y si el usuario es miembro de la sala, este será ingresado a la sala.
 
 Request:
 ```json
@@ -408,17 +413,3 @@ BAD resonse:
     "error": "Invalid Credentials"
 }
 ```
-
----
-
-## Caché
-
-EL uso de caché para esta entrega se implementó mediante el servicio de AWS ElastiCache con un cluster de Redis. Lo implementamos de esta forma para asegurar una escalabilidad, aprovechar su buen desempeño y simplificar la carga en la administración, monitoreo y el funcionamiento de la memoria, enfocandonos en la parte del desarrollo únicamente. Todo esto fue investigado desde su [página](https://aws.amazon.com/es/elasticache/) para una mejor elección.
-
-Esta tecnología fue implementada en el desarrollo utilizando Redis instalado localmente, pero que al momento de pasar a producción, este se conecte al servicio ElastiCache con el cluster de Redis estando dentro de un mismo grupo de seguridad (y VPN). Con esto nos conectamos a su *Primary Endpoint* para ser utilizado.
-
-### Publisher/Suscriber
-En una primera instancia se implementó ElastiCache para Redis como un estándar **Pub/Sub** para chat y mensajería, que en este caso permitía la transmición de los mensajes en tiempo real y la intercomunicación entre servidores. Esto se hace mediante una configuración *FIFO*, pero que no es garantizada, ya que sigue el [protocolo de Redis](https://redis.io/topics/pubsub) específicamente. Este se usó como consecuencia directa del querer realizar un chat en tiempo real, donde esta configuración nos permitía asociar a un usuario como receptor de las nuevas publicaciones (mensajes) que se vayan enviando. 
-
-### Session Store
-Utilizamos el caché en un segundo caso de uso como **Redis-backend session storage**. Esto lo utilizamos mediante una configuración de almacenamiento *hash*, para guardar la variable de sesión ya instanciada. Esta configuración la utilizamos para mejorar el control que tenemos sobre las *cookies* como variables de sesión, lo que esto puede permitir a futuro el poder compartir sesiones entre aplicaciones como incluso manejar la información del usuario que llegue después, según la [guía e información](https://medium.com/@kirill_shevch/configuration-cache-and-rails-session-store-with-redis-b3ce6f64d1fc). Además de esto, decidimos utilizarla para mejorar escalabilidad y eficiencia de la conexión entre distintas páginas, la Api y el frontend.

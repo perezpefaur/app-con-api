@@ -60,7 +60,7 @@ module V1
             if @msg_params[:body].include? "@"
               nickname = @msg_params[:body].split("@")[1].split(" ")[0]
               mention = User.where({nickname: nickname}).first
-              if mention
+              if mention && Member.find_by({user_id: mention.id, chatroom_id: @room.id})
                 notification = {title: "Te han mencionado en la sala #{@room.name}", body: @msg_params[:body]}
                 ActionCable.server.broadcast(
                     "notification_user_#{mention.id}",
