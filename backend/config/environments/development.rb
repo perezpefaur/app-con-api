@@ -65,6 +65,9 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.action_cable.url = 'wss://api.textgram.gq/cable'
+  config.action_cable.disable_request_forgery_protection = true
+
   config.hosts << "rails_app"
   config.hosts << "textgram.gq"
   config.hosts << "www.textgram.gq"

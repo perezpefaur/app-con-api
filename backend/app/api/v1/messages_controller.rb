@@ -44,19 +44,18 @@ module V1
         message = Message.new(@msg_params)
 
         @msg_params = @msg_params.to_h
-        @msg_params.delete(:user_id)
+        # @msg_params.delete(:user_id)
         @msg_params.delete(:chatroom_id)
         @msg_params.delete(:created_at)
         if message.save
             date = message.created_at.strftime("%d %m %y %H %M").split(" ")
             @msg_params[:date] = date
             response = {message: @msg_params, status: 200}
-
-            # ActionCable.server.broadcast(
-            #     "messages_#{room_id}",
-            #     server: false,
-            #     data: @msg_params
-            # )
+            ActionCable.server.broadcast(
+                "messages_#{@room.id}",
+                server: false,
+                data: @msg_params
+            )
 
             if @msg_params[:body].include? "@"
               nickname = @msg_params[:body].split("@")[1].split(" ")[0]
