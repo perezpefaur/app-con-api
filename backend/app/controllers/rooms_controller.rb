@@ -1,9 +1,9 @@
 class RoomsController < ApplicationController
-    before_action :authenticate_user!
     before_action :get_create_params, only: [:create]
     before_action :get_my_rooms, only: [:index, :my_rooms]
     before_action :set_join_room, only: [:join_room]
     before_action :set_room, only: [:update, :show, :destroy]
+    
     def index
         av_rooms = Chatroom.where({private: false}).to_a
         @rooms = @my_rooms + av_rooms.difference(@my_rooms.to_a)

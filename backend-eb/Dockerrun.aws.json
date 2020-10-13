@@ -1,0 +1,11 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+        "Name": "477820498293.dkr.ecr.us-east-1.amazonaws.com/backend-e1:latest",
+        "Update": "true"
+    },
+    "Ports": [{
+        "HostPort": 80,
+        "ContainerPort": 3000
+    }]
+  }

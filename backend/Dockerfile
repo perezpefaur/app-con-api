@@ -1,6 +1,6 @@
 FROM ruby:2.6.5-alpine
 
-LABEL maintainer="Ian Basly igbasly@uc.cl"
+LABEL maintainer="Grupo 3"
 
 # Install necessary dependencies
 RUN apk add --update --no-cache \
@@ -29,14 +29,12 @@ RUN bundle install
 
 COPY . $APP_HOME
 
+EXPOSE 3000
+
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-
-ENV REDIS_URL="redis://redis:6379"
-
-RUN bundle exec rails assets:precompile
 
 # Start the main process.
 CMD ["rails", "server", "-b", "0.0.0.0"]

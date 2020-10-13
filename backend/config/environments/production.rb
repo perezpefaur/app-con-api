@@ -8,11 +8,14 @@ Rails.application.configure do
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
-  config.eager_load = true
+  config.eager_load = false
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+  config.action_controller.enable_fragment_cache_logging = true
+  config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+  config.session_store :cache_store, key: ENV['APP_SESSION_KEY']
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
@@ -45,7 +48,8 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  # config.action_cable.url = 'wss://example.com/cable'
+  config.action_cable.url = 'wss://api.textgram.gq/cable'
+  config.action_cable.disable_request_forgery_protection = true
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
@@ -117,4 +121,7 @@ Rails.application.configure do
   config.hosts << "textgram.gq"
   config.hosts << "www.textgram.gq"
   config.hosts << "localhost"
+  config.hosts << "lb-backend-e1-1925354652.us-east-1.elb.amazonaws.com"
+  config.hosts << "api.textgram.gq"
+  
 end
