@@ -53,7 +53,11 @@ module V1
     end
 
     def show
-        if @room and Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
+        if @room
+          if not Member.find_by({user_id: current_v1_user.id, chatroom_id: @room.id})
+            Member.create({user_id: current_v1_user.id, chatroom_id: @room.id})
+            Message.create({user_id: 0, chatroom_id: @room.id, system: true, body: "@#{current_v1_user.nickname} se ha unido al chat!"})
+          end
             db_messages = Message.where({chatroom_id: @room.id})
                 @messages = []
                 db_messages.each do |m|
