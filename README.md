@@ -56,6 +56,14 @@ Toda la conexión entre clientes y servidor para la recepción de mensajes en ti
 ### Limitaciones y restricciones
 En general este tipo de estilos de arquitectura suelen ser bastante ventajosos al momento de crear envíos masivos y rápidos de información a distintos recpetores. Pero esto es más eficiente cuando hay muchos canales con un número moderado de suscriptores. Una vez que los canales se comienzan a llenar, la eficiencia del mecanismo comienza a decaer debido a la cantidad de receptores a los que hay que enviar información. Esto quiere decir que este mecanismo debido a la forma "paralela" de operar, puede ser un pcoo más dificil y cosotos (de recursos) de  escalar.
 
+En específico, para las notificaciones en caso de ser mencionado, se utilizó la librería `flutter_local_notifications`. La cual permite desplegar notificaciones locales en los dispositicos Android e iOS, pero solo cuando estos se encuentran con la aplicación operando. Además, como las notificaciones llegan mediante un canal único de Redis, estás son solo accesibles con la aplicación funcionando, lo cual es una clara restricción a cuando se envían mensajes y uno no está conectado.
+
+### Menciones en chat `@` y notificaciones
+
+* Las menciones en los chat, deben ser con el simbolo `@` seguido del nombre de usuario.
+* En caso de que el usuario esté activo, se enviará la notificación.
+* En algunos dispositivos la notificación solo se mostrará si es que no se encuentra en la aplicación. Por ejmeplo en la pantalla de inicio del dispotivo.
+
 ---
 ---
 
